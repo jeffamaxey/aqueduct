@@ -135,7 +135,7 @@ class Classifier:
 
     def process_list(self, data: List[torch.Tensor]) -> List[torch.Tensor]:
         batch = torch.stack(data)
-        return [elem for elem in self._process_batch(batch)]
+        return list(self._process_batch(batch))
 
     def get_cfg(self):
         return resolve_data_config({}, model=self.model, use_test_size=True)
@@ -194,8 +194,7 @@ class Pipeline:
     def process(self, im: bytes) -> List[Tuple[str, float]]:
         im_torch = self.preprocessor.process(im)
         pred = self.classifier.process_list(data=[im_torch])[0]
-        named_predicts = self.postprocessor.process(pred)
-        return named_predicts
+        return self.postprocessor.process(pred)
 
 
 class ModelsProducer:

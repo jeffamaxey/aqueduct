@@ -306,7 +306,7 @@ class TestFlow:
     async def test_process_seq_batch_filling(self, tasks_batch, flow_with_multiproc_bathcer):
         """Checks that batches are being filled sequentially."""
         await asyncio.gather(*[flow_with_multiproc_bathcer.process(task) for task in tasks_batch])
-        assert len(set(task.result for task in tasks_batch)) == 1
+        assert len({task.result for task in tasks_batch}) == 1
 
     async def test_process_batch_collecting_metrics(self, flow_with_batch_handler, tasks_batch):
         """Checks that batch collecting time doesn't include the time for waiting for the first element."""

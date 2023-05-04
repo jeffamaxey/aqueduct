@@ -103,9 +103,8 @@ async def get_requests_stats(
         if isinstance(resp, AsyncContextManager):
             async with resp as r:
                 statuses.append(r.status)
-                if check_ok:
-                    if r.status == HTTPStatus.OK:
-                        await check_ok(r)
+                if check_ok and r.status == HTTPStatus.OK:
+                    await check_ok(r)
         elif isinstance(resp, asyncio.TimeoutError):
             statuses.append(499)
         elif isinstance(resp, aiohttp.ClientConnectionError):

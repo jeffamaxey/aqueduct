@@ -133,17 +133,7 @@ class ProcessContext:
         failed_process = self.processes[error_index]
         if self.error_queues[error_index].empty():
             exitcode = self.processes[error_index].exitcode
-            if exitcode < 0:
-                name = signal.Signals(-exitcode).name
-                raise ProcessExitedException(
-                    'process %d terminated with signal %s' %
-                    (error_index, name),
-                    error_index=error_index,
-                    error_pid=failed_process.pid,
-                    exit_code=exitcode,
-                    signal_name=name
-                )
-            else:
+            if exitcode >= 0:
                 raise ProcessExitedException(
                     'process %d terminated with exit code %d' %
                     (error_index, exitcode),
@@ -152,6 +142,15 @@ class ProcessContext:
                     exit_code=exitcode
                 )
 
+            name = signal.Signals(-exitcode).name
+            raise ProcessExitedException(
+                'process %d terminated with signal %s' %
+                (error_index, name),
+                error_index=error_index,
+                error_pid=failed_process.pid,
+                exit_code=exitcode,
+                signal_name=name
+            )
         original_trace = self.error_queues[error_index].get()
         msg = '\n\n-- Process %d terminated with the following error:\n' % error_index
         msg += original_trace

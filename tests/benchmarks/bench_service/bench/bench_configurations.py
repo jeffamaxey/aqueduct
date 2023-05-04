@@ -4,6 +4,7 @@ Calculations are performed when the service configuration is automatically chang
 
 To start, see README.md.
 """
+
 import json
 import pathlib
 import subprocess
@@ -23,7 +24,7 @@ from .utils import run_cmd
 PROJ_ROOT = pathlib.Path(__file__).parent.parent
 REPORT_NAME = 'report_%s.csv'
 
-RUN_SERVICE = f'docker-compose --env-file %s up -d --scale maas=%s maas'
+RUN_SERVICE = 'docker-compose --env-file %s up -d --scale maas=%s maas'
 STOP_SERVICE = 'docker-compose stop maas'
 RM_SERVICE = 'docker-compose rm -f maas'
 RUN_BENCH = 'docker-compose exec maas-bench python -m bench.rps_counter %s %s'

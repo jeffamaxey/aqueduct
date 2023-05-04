@@ -116,8 +116,7 @@ class SharedMemoryWrapper:
 
     def __getstate__(self) -> dict:
         self._rc.inc()
-        state = {k: v for k, v in self.__dict__.items() if k not in ('_shm', '_rc')}
-        return state
+        return {k: v for k, v in self.__dict__.items() if k not in ('_shm', '_rc')}
 
     def __setstate__(self, state: dict):
         self.__dict__.update(state)
@@ -210,8 +209,7 @@ class SharedFieldsMixin:
                 warnings.warn(f'The {key} field value is not shared anymore')
 
     def __getstate__(self) -> dict:
-        state = {k: v for k, v in self.__dict__.items() if k not in self._shared_fields}
-        return state
+        return {k: v for k, v in self.__dict__.items() if k not in self._shared_fields}
 
     def __setstate__(self, state: dict):
         self.__dict__.update(state)

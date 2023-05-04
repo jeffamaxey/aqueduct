@@ -192,11 +192,7 @@ class Flow:
         """ If queue size not specified manually, get queue size based on batch size for handler.
         We need at least batch_size places in queue and then some additional space
         """
-        if self._queue_size:
-            return self._queue_size
-
-        # queue should be able to store at least 20 task, that's seems reasonable
-        return max(step.batch_size*3, 20)
+        return self._queue_size if self._queue_size else max(step.batch_size*3, 20)
 
     def _run_steps(self, timeout: Optional[int]):
         if len(self._steps) == 0:
@@ -265,8 +261,7 @@ class Flow:
     @staticmethod
     def _fetch_from_queue(out_queue: mp.Queue) -> Union[BaseTask, None]:
         try:
-            task = out_queue.get(timeout=1.)
-            return task
+            return out_queue.get(timeout=1.)
         except queue.Empty:
             return None
 
@@ -304,11 +299,10 @@ class Flow:
         while True:
             for handler, context in self._contexts.items():
                 for proc in context.processes:
-                    if not proc.is_alive():
-                        if self.is_running:
-                            log.error('The process %s for %s handler is dead',
-                                      proc.pid, handler.__class__.__name__)
-                            await self.stop(graceful=False)
+                    if not proc.is_alive() and self.is_running:
+                        log.error('The process %s for %s handler is dead',
+                                  proc.pid, handler.__class__.__name__)
+                        await self.stop(graceful=False)
             await asyncio.sleep(sleep_sec)
 
     @staticmethod

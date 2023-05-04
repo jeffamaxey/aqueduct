@@ -39,9 +39,7 @@ def _get_times(func, *args, **kwargs) -> List[float]:
 
 
 def _mean_time(times: List[float], units: str = 'ms'):
-    k = 1
-    if units == 'ms':
-        k = 10**3
+    k = 10**3 if units == 'ms' else 1
     times = np.array(times) * k
     return f'{times.mean():.2f} +- {times.std():.2f} {units}'
 

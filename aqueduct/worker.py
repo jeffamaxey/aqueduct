@@ -102,8 +102,7 @@ class Worker:
         we just simply get all tasks that are currently in the queue and making batch only from them.
         """
         while True:
-            task = self._wait_task(timeout=0.)
-            if task:
+            if task := self._wait_task(timeout=0.0):
                 batch.append(task)
                 if len(batch) == self._batch_size:
                     break
@@ -118,10 +117,7 @@ class Worker:
 
         # wait for the first task
         while True:
-            # wait for some long amount of time (10 secs), and wait again,
-            # until we eventually get a task
-            task = self._wait_task(10.)
-            if task:
+            if task := self._wait_task(10.0):
                 batch.append(task)
                 timer.start()
                 break

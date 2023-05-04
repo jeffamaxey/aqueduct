@@ -32,10 +32,7 @@ class Exporter(ABC):
     def __init__(self, target: Any, export_period: float = 10., prefix: str = None):
         self.target = target
         self.export_period = export_period
-        if prefix is None:
-            self.prefix = AQUEDUCT
-        else:
-            self.prefix = f'{AQUEDUCT}.{prefix}'
+        self.prefix = AQUEDUCT if prefix is None else f'{AQUEDUCT}.{prefix}'
 
     @abstractmethod
     def export(self, metrics: AqueductMetricsStorage):

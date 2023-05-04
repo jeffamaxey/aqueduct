@@ -79,7 +79,7 @@ class Classifier:
 
     def process_list(self, data: List[torch.Tensor]) -> List[torch.Tensor]:
         batch = torch.stack(data)
-        return [elem for elem in self._process_batch(batch)]
+        return list(self._process_batch(batch))
 
     def _get_model(self):
         model = create_model(
@@ -137,9 +137,7 @@ class Pipeline:
         im_torch = self.preprocessor.process(im)
         # second step
         pred = self.classifier.process_list(data=[im_torch])[0]
-        # third step
-        named_predicts = self.postprocessor.process(pred)
-        return named_predicts
+        return self.postprocessor.process(pred)
 
 
 class ModelsProducer:

@@ -59,13 +59,10 @@ def run(view_type: ImViewType, mp_type: MPType, share: bool = False):
         im = get_image()
 
         if view_type == ImViewType.NUMPY:
-            if share:
-                with timeit() as t:
-                    task = task_type(im)
+            with timeit() as t:
+                task = task_type(im)
+                if share:
                     task.share_value('im')
-            else:
-                with timeit() as t:
-                    task = task_type(im)
         elif view_type == ImViewType.TT:
             if share:
                 with timeit() as t:
